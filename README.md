@@ -2,6 +2,8 @@
 
 Demo funcional de un sistema de pedidos desacoplado con **NestJS**, **MongoDB**, **NATS**, **Next.js (dashboard)** y **Docker**.
 
+**Documentación ampliada (visión, arquitectura y referencia):** carpeta [`docs/`](./docs/README.md).
+
 ## Requisitos
 
 - Node.js 18+
