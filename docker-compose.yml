@@ -1,0 +1,78 @@
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js", "-m", "8222"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+  order-service:
+    build:
+      context: .
+      dockerfile: apps/order-service/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/order_demo
+      NATS_URL: nats://nats:4222
+      PORT: "3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: apps/payment-service/Dockerfile
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/order_demo
+      NATS_URL: nats://nats:4222
+      PAYMENT_FAILURE_RATE: "0.35"
+      PAYMENT_MAX_RETRIES: "3"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: apps/notification-service/Dockerfile
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/order_demo
+      NATS_URL: nats://nats:4222
+    depends_on:
+      mongo:
+        condition: service_healthy
+      nats:
+        condition: service_started
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/order_demo
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo_data:

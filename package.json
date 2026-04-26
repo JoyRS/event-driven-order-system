@@ -1,0 +1,21 @@
+{
+  "name": "event-driven-order-system",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @eds/contracts && npm run build -w order-service && npm run build -w payment-service && npm run build -w notification-service && npm run build -w dashboard",
+    "dev:order": "npm run start:dev -w order-service",
+    "dev:payment": "npm run start:dev -w payment-service",
+    "dev:notification": "npm run start:dev -w notification-service",
+    "dev:dashboard": "npm run dev -w dashboard",
+    "start:order": "npm run start:prod -w order-service",
+    "start:payment": "npm run start:prod -w payment-service",
+    "start:notification": "npm run start:prod -w notification-service"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
