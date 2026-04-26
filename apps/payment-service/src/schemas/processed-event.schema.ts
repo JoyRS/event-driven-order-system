@@ -1,3 +1,4 @@
+import { demoRecordTtlSeconds } from '@eds/contracts';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -19,3 +20,8 @@ export class ProcessedEvent {
 export const ProcessedEventSchema = SchemaFactory.createForClass(ProcessedEvent);
 
 ProcessedEventSchema.index({ eventId: 1, consumer: 1 }, { unique: true });
+
+const ttlProc = demoRecordTtlSeconds();
+if (ttlProc > 0) {
+  ProcessedEventSchema.index({ createdAt: 1 }, { expireAfterSeconds: ttlProc });
+}

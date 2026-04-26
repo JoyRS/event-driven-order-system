@@ -1,3 +1,4 @@
+import { demoRecordTtlSeconds } from '@eds/contracts';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -23,4 +24,8 @@ export class DlqRecord {
 export const DlqRecordSchema = SchemaFactory.createForClass(DlqRecord);
 
 DlqRecordSchema.index({ originalEventId: 1 }, { unique: true });
-DlqRecordSchema.index({ createdAt: -1 });
+
+const ttlDlq = demoRecordTtlSeconds();
+if (ttlDlq > 0) {
+  DlqRecordSchema.index({ createdAt: 1 }, { expireAfterSeconds: ttlDlq });
+}

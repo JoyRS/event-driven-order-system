@@ -1,3 +1,5 @@
+export { demoRecordTtlSeconds } from './ttl';
+
 export const EventSubject = {
   ORDER_CREATED: 'order.created',
   PAYMENT_COMPLETED: 'payment.completed',

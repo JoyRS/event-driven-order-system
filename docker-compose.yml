@@ -28,6 +28,7 @@ services:
       MONGODB_URI: mongodb://mongo:27017/order_demo
       NATS_URL: nats://nats:4222
       PORT: "3000"
+      DEMO_RECORD_TTL_SECONDS: "86400"
     depends_on:
       mongo:
         condition: service_healthy
@@ -43,6 +44,7 @@ services:
       NATS_URL: nats://nats:4222
       PAYMENT_FAILURE_RATE: "0.35"
       PAYMENT_MAX_RETRIES: "3"
+      DEMO_RECORD_TTL_SECONDS: "86400"
     depends_on:
       mongo:
         condition: service_healthy
@@ -56,6 +58,7 @@ services:
     environment:
       MONGODB_URI: mongodb://mongo:27017/order_demo
       NATS_URL: nats://nats:4222
+      DEMO_RECORD_TTL_SECONDS: "86400"
     depends_on:
       mongo:
         condition: service_healthy

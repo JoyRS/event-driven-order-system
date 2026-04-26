@@ -1,3 +1,4 @@
+import { demoRecordTtlSeconds } from '@eds/contracts';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -14,5 +15,9 @@ export class MetricEvent {
 
 export const MetricEventSchema = SchemaFactory.createForClass(MetricEvent);
 
-MetricEventSchema.index({ createdAt: -1 });
 MetricEventSchema.index({ name: 1, createdAt: -1 });
+
+const ttlMetric = demoRecordTtlSeconds();
+if (ttlMetric > 0) {
+  MetricEventSchema.index({ createdAt: 1 }, { expireAfterSeconds: ttlMetric });
+}

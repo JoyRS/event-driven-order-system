@@ -1,0 +1,78 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-event-driven-order-demo",
+    "name": "Event-Driven Order System",
+    "description": "Colección para la demo: Order Service (REST + Swagger) y Dashboard Next (stats). Variables: `orderBaseUrl`, `dashboardBaseUrl`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "orderBaseUrl", "value": "http://localhost:3000" },
+    { "key": "dashboardBaseUrl", "value": "http://localhost:3001" }
+  ],
+  "item": [
+    {
+      "name": "Order Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{orderBaseUrl}}/health",
+            "description": "Liveness demo. Ver también Swagger UI en `/api/docs`."
+          },
+          "response": []
+        },
+        {
+          "name": "Create order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"cust-1\",\n  \"items\": [\n    { \"sku\": \"A1\", \"qty\": 2, \"unitPrice\": 10 }\n  ],\n  \"currency\": \"EUR\"\n}\n"
+            },
+            "url": "{{orderBaseUrl}}/orders",
+            "description": "Crea pedido y publica `order.created` en NATS."
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI JSON (Swagger)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{orderBaseUrl}}/api/docs-json",
+            "description": "Especificación generada por Nest Swagger. Importar en Postman: Import → Link o pegar JSON."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard (Next.js)",
+      "item": [
+        {
+          "name": "GET stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{dashboardBaseUrl}}/api/stats",
+            "description": "Métricas último minuto, totales y DLQ recientes."
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI JSON (dashboard)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{dashboardBaseUrl}}/api/openapi",
+            "description": "Spec estático para `/api/stats`. UI Swagger en `/swagger`."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

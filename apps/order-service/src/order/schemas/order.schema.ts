@@ -1,3 +1,4 @@
+import { demoRecordTtlSeconds } from '@eds/contracts';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -27,3 +28,8 @@ export class Order {
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
+const ttl = demoRecordTtlSeconds();
+if (ttl > 0) {
+  OrderSchema.index({ createdAt: 1 }, { expireAfterSeconds: ttl });
+}

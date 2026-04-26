@@ -28,6 +28,13 @@ Ver logs de los contenedores `payment-service` y `notification-service` para el 
 
 **Dashboard** (métricas ~eventos/s en ventana de 60s, desglose por nombre de métrica y tabla DLQ): [http://localhost:3001](http://localhost:3001)
 
+**Swagger / OpenAPI**
+
+- **Order Service**: UI en [http://localhost:3000/api/docs](http://localhost:3000/api/docs) · JSON [http://localhost:3000/api/docs-json](http://localhost:3000/api/docs-json) · YAML [http://localhost:3000/api/docs-yaml](http://localhost:3000/api/docs-yaml)
+- **Dashboard**: UI en [http://localhost:3001/swagger](http://localhost:3001/swagger) · spec [http://localhost:3001/api/openapi](http://localhost:3001/api/openapi)
+
+**Postman**: importar `postman/event-driven-order-system.postman_collection.json` (variables `orderBaseUrl`, `dashboardBaseUrl`). También puedes generar la colección desde el OpenAPI del order-service: Importar → pegar URL de `/api/docs-json`.
+
 Carga rápida (requiere Node 18+ con `fetch` global, o ejecutar desde un runtime compatible):
 
 ```bash
@@ -112,6 +119,7 @@ Cada servicio es independiente:
 ### 3. Persistencia (MongoDB)
 
 - Pedidos y registro de eventos procesados / publicados
+- **Retención demo (24 h):** índices **TTL** sobre `createdAt` en `orders`, `event_records`, `processed_events`, `metric_events` y `dlq_records`. MongoDB elimina documentos cuando `createdAt` supera el umbral (por defecto **86400 s**). El monitor TTL corre aprox. cada 60 s. Variable: `DEMO_RECORD_TTL_SECONDS` (`0` desactiva el índice TTL al arrancar los esquemas; en bases ya existentes puede hacer falta ajustar índices a mano).
 - Estructura mínima del registro de eventos:
 
 ```json
